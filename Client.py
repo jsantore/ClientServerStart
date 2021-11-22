@@ -3,12 +3,37 @@ import arcade
 import asyncio
 import socket
 import Server
+import pathlib
 
 class GameClient(arcade.Window):
     def __init__(self, server_add, client_add):
-        super().__init__()
+        super().__init__(1000, 1000)
+        self.ip_addr = client_add
+        self.image_path = pathlib.Path.cwd() / 'Assets' / 'captain1.png'
+        self.player = arcade.Sprite(self.image_path)
+        self.target = arcade.Sprite(str(pathlib.Path.cwd() / 'Assets' / 'gold-coins.png'))
         self.server_address = server_add
-        self.client_address = client_add
+        self.player_list = arcade.SpriteList()
+        self.target_list = arcade.SpriteList()
+        self.target_list.append(self.target)
+        self.player_list.append(self.player)
+        self.from_server = 0
+        #        self.player_state_list = PlayerState.GameState(player_states=[])
+        # self.actions = PlayerState.PlayerMovement()
+
+    def setup(self):
+        self.player = arcade.Sprite(self.image_path)
+        self.player_list.append(self.player)
+        self.from_server = ""
+
+    def on_update(self, delta_time: float):
+        pass
+
+    def on_draw(self):
+        arcade.start_render()
+        self.player_list.draw()
+        self.target_list.draw()
+        arcade.draw_text(f"Your Score {self.from_server}", 100, 900, color=(240, 30, 30), font_size=24)
 
 
 def setup_client_connection(client: GameClient):
